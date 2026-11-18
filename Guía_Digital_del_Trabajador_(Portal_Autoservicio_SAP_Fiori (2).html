@@ -1,0 +1,1994 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="artifact-type" content="dashboard">
+  <meta name="design-style" content="vitals">
+  <title>Guía Interactiva Autoservicio SAP Fiori — Residencia Utrillas</title>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Figtree:wght@300..900&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@1.43.0/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      color-scheme: light;
+
+      /* Page and surfaces (Vitals) */
+      --background: #ffffff;
+      --surface-container-low: #f1f7f8;
+      --surface-container: #e3f1f3;
+      --surface-container-high: #d5e9ec;
+
+      /* Text */
+      --on-surface: #1b2b33;
+      --on-surface-variant: #46585f;
+
+      /* Rules */
+      --outline: #7b9198;
+      --outline-variant: #d5e3e5;
+
+      /* Accents */
+      --primary: #0f7c8a;
+      --on-primary: #ffffff;
+      --primary-container: #e3f1f3;
+      --on-primary-container: #0a5560;
+      --secondary: #1d5e3a;
+      --tertiary: #2e7d4f;
+      --error: #b3261e;
+      --on-error: #ffffff;
+
+      /* Data series */
+      --data-1: #0f7c8a;
+      --data-2: #2e7d4f;
+      --data-3: #b86e00;
+      --data-4: #5c5fb0;
+      --data-context: #b8c7ca;
+
+      /* Fonts */
+      --font-headline: 'Figtree', sans-serif;
+      --font-body: 'Atkinson Hyperlegible', sans-serif;
+      --font-label: 'Figtree', sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+      /* Shape */
+      --rounded: 0.625rem;
+      --rounded-lg: 0.875rem;
+      --rounded-full: 9999px;
+
+      /* Style effects */
+      --top-bar: 6px solid var(--primary);
+      --status-bar-width: 4px;
+      --card-border: 1px solid var(--outline-variant);
+      --card-lift: 0 1px 2px rgb(27 43 51 / 0.05), 0 6px 16px rgb(27 43 51 / 0.05);
+
+      /* Shared semantic tokens */
+      --positive: var(--tertiary);
+      --warning: var(--data-3);
+      --focus: var(--primary);
+      --alert-surface: color-mix(in srgb, var(--error) 8%, var(--background));
+      --ok-surface: color-mix(in srgb, var(--tertiary) 12%, var(--background));
+      --warn-surface: color-mix(in srgb, var(--data-3) 12%, var(--background));
+
+      /* Type scale (Dashboard) */
+      --display-size: clamp(1.75rem, 1.4rem + 1.2vw, 2.25rem);
+      --headline-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
+      --subhead-size: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+      --body-size: clamp(0.9375rem, 0.9rem + 0.15vw, 1rem);
+      --label-size: 0.75rem;
+
+      /* Spacing scale (4pt base) */
+      --space-xs: 0.25rem;
+      --space-sm: 0.5rem;
+      --space-md: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2.5rem;
+      --space-2xl: 4rem;
+      --space-3xl: 6rem;
+
+      /* Motion */
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+      --dur-micro: 120ms;
+      --dur-short: 220ms;
+      --dur-long: 420ms;
+    }
+
+    /* Base reset */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { overflow-x: clip; margin: 0; padding: 0; }
+    header { position: static !important; }
+
+    body {
+      background: var(--surface-container-low);
+      color: var(--on-surface);
+      font-family: var(--font-body);
+      font-size: var(--body-size);
+      line-height: 1.6;
+      border-top: var(--top-bar);
+    }
+
+    .page-grid {
+      display: grid;
+      gap: var(--space-lg);
+      padding: var(--space-lg);
+      max-width: 1220px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+    .page-grid * { min-width: 0; }
+
+    /* Focus rings */
+    :focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    /* Typography */
+    h1, h2, h3, h4 {
+      font-family: var(--font-headline);
+      color: var(--on-surface);
+      margin: 0;
+    }
+
+    .kicker {
+      font-family: var(--font-label);
+      font-weight: 600;
+      font-size: var(--label-size);
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--primary);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+    }
+
+    .title {
+      font-family: var(--font-headline);
+      font-weight: 800;
+      font-size: var(--display-size);
+      letter-spacing: -0.015em;
+      line-height: 1.08;
+      margin-top: var(--space-xs);
+    }
+
+    .section-title {
+      font-family: var(--font-headline);
+      font-weight: 800;
+      font-size: var(--headline-size);
+      letter-spacing: -0.015em;
+      line-height: 1.15;
+    }
+
+    .subhead {
+      font-family: var(--font-headline);
+      font-weight: 700;
+      font-size: var(--subhead-size);
+      line-height: 1.25;
+    }
+
+    .lede {
+      font-size: 1.0625rem;
+      line-height: 1.6;
+      color: var(--on-surface-variant);
+      max-width: 65ch;
+      margin: var(--space-sm) 0 0;
+    }
+
+    p { margin: 0; max-width: 65ch; }
+
+    /* Hero Header */
+    .hero-panel {
+      background: var(--background);
+      border: var(--card-border);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-lg) var(--space-xl);
+      box-shadow: var(--card-lift);
+      display: grid;
+      gap: var(--space-lg);
+    }
+
+    .hero-top {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--space-md);
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      align-items: center;
+    }
+
+    /* Reassurance & Status Chips */
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      font-family: var(--font-label);
+      font-weight: 600;
+      font-size: var(--label-size);
+      padding: var(--space-xs) var(--space-md);
+      border-radius: var(--rounded-full);
+      background: var(--ok-surface);
+      color: var(--secondary);
+      white-space: nowrap;
+    }
+    .chip[data-status="info"] {
+      background: var(--primary-container);
+      color: var(--on-primary-container);
+    }
+    .chip[data-status="alert"] {
+      background: var(--alert-surface);
+      color: var(--error);
+    }
+    .chip[data-status="warn"] {
+      background: var(--warn-surface);
+      color: var(--on-surface);
+    }
+
+    /* Status Accent Bar Cards */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+      gap: var(--space-md);
+    }
+
+    .status-card {
+      background: var(--background);
+      border: var(--card-border);
+      border-left: var(--status-bar-width) solid var(--primary);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-md) var(--space-lg);
+      display: grid;
+      gap: var(--space-xs);
+      align-content: start;
+    }
+    .status-card[data-status="ok"] { border-left-color: var(--tertiary); }
+    .status-card[data-status="alert"] {
+      border-left-color: var(--error);
+      background: var(--alert-surface);
+    }
+
+    .kpi-label {
+      font-family: var(--font-label);
+      font-weight: 600;
+      font-size: var(--label-size);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--on-surface-variant);
+    }
+    .kpi-value {
+      font-family: var(--font-headline);
+      font-weight: 800;
+      font-size: 1.5rem;
+      line-height: 1.15;
+      font-variant-numeric: tabular-nums;
+      color: var(--on-surface);
+    }
+    .status-card[data-status="alert"] .kpi-value { color: var(--error); }
+    .kpi-caption {
+      font-size: 0.875rem;
+      color: var(--on-surface-variant);
+      line-height: 1.45;
+    }
+    .status-card[data-status="ok"] .kpi-caption { color: var(--secondary); font-weight: 700; }
+    .status-card[data-status="alert"] .kpi-caption { color: var(--on-surface); font-weight: 700; }
+
+    /* Critical IT Callout */
+    .callout {
+      background: var(--primary-container);
+      border: var(--card-border);
+      border-left: var(--status-bar-width) solid var(--primary);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-md) var(--space-lg);
+      color: var(--on-primary-container);
+      display: flex;
+      gap: var(--space-md);
+      align-items: flex-start;
+    }
+    .callout[data-status="alert"] {
+      background: var(--alert-surface);
+      border-left-color: var(--error);
+      color: var(--on-surface);
+    }
+    .callout[data-status="ok"] {
+      background: var(--ok-surface);
+      border-left-color: var(--tertiary);
+      color: var(--on-surface);
+    }
+    .callout-icon {
+      flex-shrink: 0;
+      margin-top: 2px;
+      color: var(--primary);
+    }
+    .callout[data-status="alert"] .callout-icon { color: var(--error); }
+    .callout[data-status="ok"] .callout-icon { color: var(--tertiary); }
+
+    /* Toolbar: Navigation Tabs & Search */
+    .nav-shell {
+      background: var(--background);
+      border: var(--card-border);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-md) var(--space-lg);
+      display: grid;
+      gap: var(--space-md);
+    }
+
+    .nav-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-md);
+      justify-content: space-between;
+      align-items: end;
+    }
+
+    .tab-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-xs);
+      border-bottom: 1px solid var(--outline-variant);
+      padding-bottom: var(--space-xs);
+    }
+
+    .nav-tab {
+      font-family: var(--font-label);
+      font-weight: 600;
+      font-size: 0.9375rem;
+      background: transparent;
+      color: var(--on-surface-variant);
+      border: 0;
+      border-bottom: 3px solid transparent;
+      border-radius: var(--rounded) var(--rounded) 0 0;
+      padding: var(--space-sm) var(--space-md);
+      min-height: 44px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      transition: background-color var(--dur-micro) var(--ease-out),
+                  color var(--dur-micro) var(--ease-out),
+                  border-color var(--dur-micro) var(--ease-out);
+    }
+    .nav-tab:hover {
+      background: var(--surface-container-low);
+      color: var(--on-surface);
+    }
+    .nav-tab[aria-selected="true"] {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+      background: var(--surface-container-low);
+    }
+
+    .search-field {
+      display: grid;
+      gap: var(--space-xs);
+      min-width: min(300px, 100%);
+      flex: 1 1 280px;
+      max-width: 380px;
+    }
+
+    .field-label {
+      font-family: var(--font-label);
+      font-weight: 600;
+      font-size: var(--label-size);
+      color: var(--on-surface);
+      display: block;
+    }
+
+    .input-wrap {
+      display: flex;
+      gap: var(--space-xs);
+      align-items: stretch;
+    }
+
+    input[type="search"], input[type="text"], select {
+      font-family: var(--font-body);
+      font-size: var(--body-size);
+      color: var(--on-surface);
+      background: var(--background);
+      border: 1px solid var(--outline);
+      border-radius: var(--rounded);
+      padding: var(--space-sm) var(--space-md);
+      min-height: 44px;
+      width: 100%;
+    }
+    input[type="search"]:focus, input[type="text"]:focus, select:focus {
+      outline: 2px solid var(--primary);
+      border-color: var(--primary);
+    }
+
+    /* Buttons */
+    .btn {
+      font-family: var(--font-label);
+      font-weight: 600;
+      font-size: 0.9375rem;
+      border-radius: var(--rounded);
+      padding: var(--space-sm) var(--space-md);
+      min-height: 44px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-xs);
+      border: 1px solid transparent;
+      transition: background-color var(--dur-micro) var(--ease-out),
+                  color var(--dur-micro) var(--ease-out),
+                  transform var(--dur-micro) var(--ease-out);
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: var(--on-primary);
+    }
+    .btn-primary:hover {
+      background: var(--on-primary-container);
+    }
+    .btn-secondary {
+      background: var(--background);
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+    .btn-secondary:hover {
+      background: var(--surface-container-low);
+    }
+    .btn-subtle {
+      background: var(--surface-container-low);
+      color: var(--on-surface);
+      border-color: var(--outline-variant);
+    }
+    .btn-subtle:hover {
+      background: var(--surface-container);
+    }
+    .btn-sm {
+      min-height: 36px;
+      padding: var(--space-xs) var(--space-sm);
+      font-size: 0.8125rem;
+    }
+
+    /* Section Containers */
+    .module-section {
+      display: grid;
+      gap: var(--space-lg);
+      animation: fadeSlide var(--dur-short) var(--ease-out);
+    }
+    .module-section.is-hidden {
+      display: none;
+    }
+
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-card {
+      background: var(--background);
+      border: var(--card-border);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-lg);
+      display: grid;
+      gap: var(--space-lg);
+    }
+
+    .section-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--space-md);
+      border-bottom: 1px solid var(--outline-variant);
+      padding-bottom: var(--space-md);
+    }
+
+    /* Two-column asymmetrical grids */
+    .split-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+      gap: var(--space-lg);
+      align-items: start;
+    }
+
+    .split-grid-equal {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+      gap: var(--space-lg);
+    }
+
+    /* URL copy rows (1-5 Access Directory) */
+    .access-list {
+      display: grid;
+      gap: var(--space-sm);
+    }
+
+    .access-item {
+      border: var(--card-border);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-md);
+      background: var(--background);
+      display: grid;
+      gap: var(--space-sm);
+    }
+
+    .access-item-head {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .access-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: var(--rounded);
+      background: var(--primary);
+      color: var(--on-primary);
+      font-family: var(--font-headline);
+      font-weight: 800;
+      font-size: 0.875rem;
+      flex-shrink: 0;
+    }
+
+    .url-box {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-sm);
+      background: var(--surface-container-low);
+      border: 1px solid var(--outline-variant);
+      border-radius: var(--rounded);
+      padding: var(--space-xs) var(--space-sm);
+    }
+
+    .url-text {
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      color: var(--on-primary-container);
+      word-break: break-all;
+    }
+
+    /* Diagnostic 1-5 toggle */
+    .diag-toggle {
+      display: inline-flex;
+      border: 1px solid var(--outline-variant);
+      border-radius: var(--rounded);
+      overflow: hidden;
+    }
+    .diag-btn {
+      font-family: var(--font-label);
+      font-weight: 600;
+      font-size: 0.75rem;
+      padding: var(--space-xs) var(--space-sm);
+      min-height: 36px;
+      border: 0;
+      background: var(--background);
+      color: var(--on-surface-variant);
+      cursor: pointer;
+    }
+    .diag-btn.is-ok {
+      background: var(--ok-surface);
+      color: var(--secondary);
+    }
+    .diag-btn.is-fail {
+      background: var(--alert-surface);
+      color: var(--error);
+    }
+
+    .incident-preview {
+      background: var(--surface-container-low);
+      border: 1px solid var(--outline-variant);
+      border-radius: var(--rounded);
+      padding: var(--space-md);
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      color: var(--on-surface);
+      white-space: pre-wrap;
+    }
+
+    /* Precedence Ladder (Fichajes) */
+    .ladder {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-md);
+    }
+
+    .ladder-step {
+      text-align: left;
+      background: var(--background);
+      border: var(--card-border);
+      border-top: 4px solid var(--outline-variant);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-md);
+      cursor: pointer;
+      display: grid;
+      gap: var(--space-xs);
+      align-content: start;
+      transition: background-color var(--dur-micro) var(--ease-out),
+                  border-color var(--dur-micro) var(--ease-out),
+                  box-shadow var(--dur-micro) var(--ease-out);
+    }
+    .ladder-step:hover {
+      background: var(--surface-container-low);
+    }
+    .ladder-step[aria-pressed="true"] {
+      border-top-color: var(--primary);
+      background: var(--surface-container-low);
+      box-shadow: var(--card-lift);
+    }
+    .ladder-step[data-rank="1"][aria-pressed="true"] { border-top-color: var(--tertiary); }
+    .ladder-step[data-rank="3"][aria-pressed="true"] { border-top-color: var(--data-3); }
+
+    /* Fiori Launchpad Interactive Simulator */
+    .fiori-shell {
+      border: 1px solid var(--outline-variant);
+      border-radius: var(--rounded-lg);
+      overflow: hidden;
+      background: var(--surface-container-low);
+    }
+
+    .fiori-topbar {
+      background: var(--on-surface);
+      color: var(--background);
+      padding: var(--space-sm) var(--space-lg);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-md);
+    }
+
+    .fiori-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-family: var(--font-headline);
+      font-weight: 700;
+      font-size: 0.9375rem;
+    }
+
+    .fiori-user-btn {
+      background: transparent;
+      color: var(--background);
+      border: 1px solid var(--outline);
+      border-radius: var(--rounded-full);
+      padding: var(--space-xs) var(--space-md);
+      min-height: 36px;
+      font-family: var(--font-label);
+      font-weight: 600;
+      font-size: 0.8125rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+    }
+    .fiori-user-btn:hover {
+      background: color-mix(in srgb, var(--background) 12%, transparent);
+    }
+
+    .fiori-tabs {
+      background: var(--background);
+      border-bottom: 1px solid var(--outline-variant);
+      padding: 0 var(--space-lg);
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+    }
+
+    .fiori-tab {
+      font-family: var(--font-label);
+      font-weight: 600;
+      font-size: 0.9375rem;
+      background: transparent;
+      border: 0;
+      border-bottom: 3px solid transparent;
+      color: var(--on-surface-variant);
+      padding: var(--space-md) var(--space-sm);
+      min-height: 44px;
+      cursor: pointer;
+    }
+    .fiori-tab[aria-selected="true"] {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    .fiori-body {
+      padding: var(--space-lg);
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+      gap: var(--space-lg);
+      align-items: start;
+    }
+
+    .tile-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(175px, 100%), 1fr));
+      gap: var(--space-md);
+    }
+
+    .fiori-tile {
+      text-align: left;
+      background: var(--background);
+      border: 1px solid var(--outline-variant);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-md);
+      min-height: 132px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: var(--space-sm);
+      transition: background-color var(--dur-micro) var(--ease-out),
+                  box-shadow var(--dur-micro) var(--ease-out),
+                  transform var(--dur-micro) var(--ease-out);
+    }
+    .fiori-tile:hover {
+      box-shadow: var(--card-lift);
+      transform: translateY(-2px);
+    }
+    .fiori-tile[aria-pressed="true"] {
+      border-color: var(--primary);
+      border-left: var(--status-bar-width) solid var(--primary);
+      background: var(--primary-container);
+    }
+
+    .tile-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--rounded);
+      background: var(--surface-container-low);
+      color: var(--primary);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .fiori-tile[aria-pressed="true"] .tile-icon {
+      background: var(--background);
+    }
+
+    .tile-title {
+      font-family: var(--font-headline);
+      font-weight: 700;
+      font-size: 0.9375rem;
+      line-height: 1.25;
+      color: var(--on-surface);
+    }
+
+    .tile-tag {
+      font-family: var(--font-label);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--on-surface-variant);
+    }
+
+    .tile-inspector {
+      background: var(--background);
+      border: var(--card-border);
+      border-left: var(--status-bar-width) solid var(--primary);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-lg);
+      display: grid;
+      gap: var(--space-md);
+      container-type: inline-size;
+    }
+
+    /* Permissions Filter & Table/Cards */
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      align-items: center;
+    }
+
+    .filter-pill {
+      font-family: var(--font-label);
+      font-weight: 600;
+      font-size: 0.875rem;
+      padding: var(--space-xs) var(--space-md);
+      min-height: 44px;
+      border-radius: var(--rounded-full);
+      border: 1px solid var(--outline-variant);
+      background: var(--background);
+      color: var(--on-surface-variant);
+      cursor: pointer;
+    }
+    .filter-pill[aria-pressed="true"] {
+      background: var(--primary);
+      color: var(--on-primary);
+      border-color: var(--primary);
+    }
+
+    .perm-table-wrap {
+      overflow-x: auto;
+      border: var(--card-border);
+      border-radius: var(--rounded-lg);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--background);
+      font-size: 0.9375rem;
+    }
+    th {
+      background: var(--surface-container-low);
+      font-family: var(--font-label);
+      font-weight: 600;
+      font-size: var(--label-size);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--on-surface-variant);
+      text-align: left;
+      padding: var(--space-md);
+      border-bottom: 1px solid var(--outline-variant);
+      white-space: nowrap;
+    }
+    td {
+      padding: var(--space-md);
+      border-bottom: 1px solid var(--outline-variant);
+      vertical-align: top;
+      color: var(--on-surface);
+    }
+    tr:last-child td { border-bottom: 0; }
+    tr.is-alert-row { background: var(--alert-surface); }
+
+    .code-badge {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 0.875rem;
+      padding: var(--space-xs) var(--space-sm);
+      border-radius: var(--rounded);
+      background: var(--primary-container);
+      color: var(--on-primary-container);
+      display: inline-block;
+      white-space: nowrap;
+    }
+    .code-badge.is-alert {
+      background: var(--error);
+      color: var(--on-error);
+    }
+
+    /* Validation Chain Stepper */
+    .chain-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--space-sm);
+    }
+
+    .chain-btn {
+      text-align: left;
+      background: var(--background);
+      border: var(--card-border);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-md);
+      cursor: pointer;
+      display: grid;
+      gap: var(--space-xs);
+      align-content: start;
+    }
+    .chain-btn[aria-pressed="true"] {
+      border-color: var(--primary);
+      background: var(--primary-container);
+    }
+    .chain-btn[data-locked="true"][aria-pressed="true"] {
+      border-color: var(--error);
+      background: var(--alert-surface);
+    }
+
+    /* Quick Scenarios Assistant */
+    .scenario-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+    }
+
+    .scenario-btn {
+      font-family: var(--font-label);
+      font-weight: 600;
+      font-size: 0.9375rem;
+      padding: var(--space-sm) var(--space-md);
+      min-height: 44px;
+      border-radius: var(--rounded);
+      border: 1px solid var(--outline-variant);
+      background: var(--background);
+      color: var(--on-surface);
+      cursor: pointer;
+      text-align: left;
+    }
+    .scenario-btn:hover { background: var(--surface-container-low); }
+    .scenario-btn[aria-pressed="true"] {
+      background: var(--primary);
+      color: var(--on-primary);
+      border-color: var(--primary);
+    }
+
+    .scenario-result {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+      gap: var(--space-md);
+    }
+
+    /* Clean list styling */
+    .clean-list {
+      margin: 0;
+      padding-left: var(--space-lg);
+      display: grid;
+      gap: var(--space-xs);
+    }
+
+    .inline-feedback {
+      font-family: var(--font-label);
+      font-weight: 600;
+      font-size: 0.8125rem;
+      color: var(--secondary);
+    }
+
+    .footer-note {
+      border-top: 1px solid var(--outline-variant);
+      padding-top: var(--space-lg);
+      color: var(--on-surface-variant);
+      font-size: 0.875rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: var(--space-md);
+    }
+
+    @container (max-width: 380px) {
+      .inspector-meta { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 860px) {
+      .split-grid, .fiori-body { grid-template-columns: 1fr; }
+      .ladder, .chain-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .page-grid { padding: var(--space-sm); gap: var(--space-md); }
+      .hero-panel, .section-card, .nav-shell { padding: var(--space-md); }
+      .nav-tab { width: 100%; justify-content: flex-start; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page-grid">
+
+    <!-- HERO HEADER -->
+    <header class="hero-panel">
+      <div class="hero-top">
+        <div>
+          <span class="kicker">
+            <i data-lucide="shield-check" aria-hidden="true" width="16" height="16"></i>
+            Residencia Utrillas · SIRHGA · S/4HANA
+          </span>
+          <h1 class="title">Guía Interactiva del Autoservicio SAP Fiori</h1>
+          <p class="lede">
+            Manual operativo ágil para el personal del centro. Consulta al instante el acceso 24/7 con doble factor (MEM), la prelación de fichajes, los mosaicos de Fiori, tus nóminas, el sistema GARES y la tramitación de permisos.
+          </p>
+        </div>
+        <div class="hero-meta">
+          <span class="chip" data-status="info">
+            <i data-lucide="clock" aria-hidden="true" width="14" height="14"></i>
+            Acceso 24/7 multidispositivo
+          </span>
+          <span class="chip" data-status="ok">
+            <i data-lucide="layers" aria-hidden="true" width="14" height="14"></i>
+            Actualizado a SAP Fiori
+          </span>
+        </div>
+      </div>
+
+      <!-- 4 KEY OPERATIONAL RULES AT A GLANCE -->
+      <div class="kpi-grid">
+        <div class="status-card" data-status="info">
+          <span class="kpi-label">Disponibilidad Fiori</span>
+          <span class="kpi-value">24 horas / 7 días</span>
+          <span class="kpi-caption">Desde dentro o fuera de la red del Gobierno de Aragón (PC, tablet o móvil).</span>
+        </div>
+        <div class="status-card" data-status="ok">
+          <span class="kpi-label">Prelación de Fichaje</span>
+          <span class="kpi-value">1.º Tarjeta · 2.º Web · 3.º Conserjería</span>
+          <span class="kpi-caption">Orden estricto obligatorio según RD-Ley 8/2019.</span>
+        </div>
+        <div class="status-card" data-status="info">
+          <span class="kpi-label">Validación de Permisos</span>
+          <span class="kpi-value">3 niveles consecutivos</span>
+          <span class="kpi-caption">Jefatura departamental → Administración → Dirección (mín. 2 días antes).</span>
+        </div>
+        <div class="status-card" data-status="alert">
+          <span class="kpi-label">Incapacidad Temporal (IT)</span>
+          <span class="kpi-value">Urgente al Centro</span>
+          <span class="kpi-caption">La baja médica (IT) NUNCA se tramita por el Autoservicio.</span>
+        </div>
+      </div>
+
+      <div class="callout" data-status="alert" role="note">
+        <i class="callout-icon" data-lucide="alert-triangle" aria-hidden="true" width="22" height="22"></i>
+        <div>
+          <strong>Regla crítica sobre bajas médicas (IT) y ausencias:</strong>
+          Si tienes un parte de baja por Incapacidad Temporal (IT), comunícalo de <strong>forma urgente al Centro</strong> y no lo introduzcas en el portal. Solo las enfermedades o accidentes <em>sin parte de baja</em> utilizan el código <strong>P032</strong> en el Autoservicio. Toda modificación sobre tu cartelera teórica debe quedar justificada; no hacerlo conlleva falta disciplinaria y descuentos en nómina.
+        </div>
+      </div>
+    </header>
+
+    <!-- NAVIGATION BAR & SEARCH -->
+    <section class="nav-shell" aria-label="Navegación y buscador de la guía">
+      <div class="nav-controls">
+        <div class="tab-row" role="tablist" aria-label="Secciones de la guía">
+          <button type="button" class="nav-tab" role="tab" aria-selected="true" data-section="all" onclick="selectSection('all', this)">
+            <i data-lucide="layout-grid" aria-hidden="true" width="16" height="16"></i>
+            Vista completa
+          </button>
+          <button type="button" class="nav-tab" role="tab" aria-selected="false" data-section="acceso" onclick="selectSection('acceso', this)">
+            <i data-lucide="key-round" aria-hidden="true" width="16" height="16"></i>
+            1. Acceso, MEM y GARES
+          </button>
+          <button type="button" class="nav-tab" role="tab" aria-selected="false" data-section="fichajes" onclick="selectSection('fichajes', this)">
+            <i data-lucide="credit-card" aria-hidden="true" width="16" height="16"></i>
+            2. Fichajes
+          </button>
+          <button type="button" class="nav-tab" role="tab" aria-selected="false" data-section="fiori" onclick="selectSection('fiori', this)">
+            <i data-lucide="panels-top-left" aria-hidden="true" width="16" height="16"></i>
+            3. Portal SAP Fiori
+          </button>
+          <button type="button" class="nav-tab" role="tab" aria-selected="false" data-section="permisos" onclick="selectSection('permisos', this)">
+            <i data-lucide="calendar-check-2" aria-hidden="true" width="16" height="16"></i>
+            4. Permisos y Borrado
+          </button>
+          <button type="button" class="nav-tab" role="tab" aria-selected="false" data-section="asistente" onclick="selectSection('asistente', this)">
+            <i data-lucide="compass" aria-hidden="true" width="16" height="16"></i>
+            5. ¿Qué hago si…?
+          </button>
+        </div>
+
+        <div class="search-field">
+          <label class="field-label" for="global-search">Buscar código, mosaico o procedimiento</label>
+          <div class="input-wrap">
+            <input type="search" id="global-search" placeholder="Ej.: P030, nómina, 2FA, GARES, borrar, SALUD…" oninput="handleGlobalSearch(this.value)">
+            <button type="button" class="btn btn-subtle" onclick="clearGlobalSearch()" aria-label="Limpiar búsqueda">Limpiar</button>
+          </div>
+        </div>
+      </div>
+      <div id="search-status" class="kpi-caption" aria-live="polite"></div>
+    </section>
+
+    <!-- MODULE 1: ACCESO 24/7, MEM, 2FA & GARES -->
+    <section id="sec-acceso" class="module-section" data-module="acceso">
+      <div class="section-card">
+        <div class="section-header">
+          <div>
+            <span class="kicker">Módulo 1 · Conectividad y Sistemas del Centro</span>
+            <h2 class="section-title">Acceso 24/7, Autenticación MEM (2FA) y Obligatoriedad de GARES</h2>
+          </div>
+          <span class="chip" data-status="info">Sin restricción horaria</span>
+        </div>
+
+        <div class="split-grid">
+          <div style="display: grid; gap: var(--space-md);">
+            <div class="status-card" data-status="info">
+              <span class="kpi-label">Nuevo portal SAP Fiori (S/4HANA)</span>
+              <h3 class="subhead">Cómo iniciar sesión en el Gestor de Identidades Corporativo (MEM)</h3>
+              <ul class="clean-list">
+                <li><strong>Disponibilidad total:</strong> Puedes entrar desde cualquier lugar (dentro o fuera de la red del Gobierno de Aragón), desde ordenador, tablet o teléfono móvil, a cualquier hora del día.</li>
+                <li><strong>Usuario válido:</strong> Introduce tu <strong>correo electrónico corporativo completo</strong> (<code>micorreo@aragon.es</code>) o bien tu <strong>DNI</strong>.</li>
+                <li><strong>Contraseña:</strong> Utiliza la misma contraseña de tu correo electrónico corporativo.</li>
+                <li><strong>Doble Factor de Autenticación (2FA):</strong> Si accedes desde fuera de la red corporativa, tienes el 2FA activado y es tu primer acceso, el sistema mostrará automáticamente la pantalla para configurarlo.</li>
+              </ul>
+            </div>
+
+            <div class="callout" data-status="ok">
+              <i class="callout-icon" data-lucide="smartphone" aria-hidden="true" width="20" height="20"></i>
+              <div>
+                <strong>Mi Cuenta (Recuperación obligatoria):</strong> En <code>micuenta.aragon.es</code> es <strong>obligatorio</strong> registrar un teléfono móvil o un segundo correo de recuperación. Así serás autosuficiente para restablecer la contraseña si caduca o la olvidas.
+              </div>
+            </div>
+
+            <div class="status-card" data-status="alert">
+              <span class="kpi-label">Sistema de gestión residencial</span>
+              <h3 class="subhead">Consulta obligatoria de GARES en cada turno de trabajo</h3>
+              <p>
+                <strong>GARES</strong> recoge la información operativa imprescindible sobre residentes y departamentos según tu perfil. Su consulta es <strong>obligatoria en cada turno</strong>. Para el alta inicial debes avisar a Administración; si tu usuario no está operativo y no lo has comunicado, la responsabilidad recae en el trabajador.
+              </p>
+            </div>
+          </div>
+
+          <!-- 5 ACCESSES + INCIDENT REPORTER (1 TO 5) -->
+          <div style="display: grid; gap: var(--space-md);">
+            <div>
+              <h3 class="subhead">Los 5 accesos del trabajador y comprobador de incidencias</h3>
+              <p class="kpi-caption">Copia cualquier dirección o marca si algún acceso te falla para generar el aviso exacto del 1 al 5 para Administración.</p>
+            </div>
+
+            <div class="access-list" id="access-list">
+              <!-- Populated by JS -->
+            </div>
+
+            <div class="status-card" data-status="info">
+              <div style="display: flex; justify-content: space-between; align-items: center; gap: var(--space-sm); flex-wrap: wrap;">
+                <span class="kpi-label">Resumen automático para Administración (del 1 al 5)</span>
+                <button type="button" class="btn btn-primary btn-sm" onclick="copyIncidentReport(this)">
+                  <i data-lucide="copy" aria-hidden="true" width="14" height="14"></i>
+                  Copiar parte 1–5
+                </button>
+              </div>
+              <pre id="incident-output" class="incident-preview"></pre>
+              <span id="incident-copy-msg" class="inline-feedback" aria-live="polite"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODULE 2: FICHAJES & PRECEDENCE -->
+    <section id="sec-fichajes" class="module-section" data-module="fichajes">
+      <div class="section-card">
+        <div class="section-header">
+          <div>
+            <span class="kicker">Módulo 2 · RD-Ley 8/2019 y Control Horario</span>
+            <h2 class="section-title">Orden de Prelación en el Registro de Fichajes</h2>
+          </div>
+          <span class="chip" data-status="ok">Responsabilidad del trabajador</span>
+        </div>
+
+        <p>
+          Debes registrar todas las entradas y salidas según tu turno asignado y revisar que figuren correctamente para el cálculo de horas y nómina. La ausencia de fichajes sin justificar puede acarrear descuentos en nómina y sanciones disciplinarias. Selecciona cada nivel para ver su protocolo exacto:
+        </p>
+
+        <div class="ladder" role="group" aria-label="Niveles de prelación de fichaje">
+          <button type="button" class="ladder-step" data-rank="1" aria-pressed="true" onclick="selectClockTier(1, this)">
+            <span class="chip" data-status="ok">1.º Método Principal</span>
+            <strong class="subhead">Tarjeta física o Tarjeta criptográfica roja</strong>
+            <span class="kpi-caption">Uso obligatorio por defecto en los terminales del centro.</span>
+          </button>
+          <button type="button" class="ladder-step" data-rank="2" aria-pressed="false" onclick="selectClockTier(2, this)">
+            <span class="chip" data-status="info">2.º Alternativa Justificada</span>
+            <strong class="subhead">Fichaje web en Autoservicio Fiori</strong>
+            <span class="kpi-caption">Solo cuando no sea posible usar la tarjeta física por causa justificada.</span>
+          </button>
+          <button type="button" class="ladder-step" data-rank="3" aria-pressed="false" onclick="selectClockTier(3, this)">
+            <span class="chip" data-status="warn">3.º Último Recurso</span>
+            <strong class="subhead">Firma manual en Conserjería</strong>
+            <span class="kpi-caption">Excepcional, si fallan tanto la tarjeta como el fichaje web.</span>
+          </button>
+        </div>
+
+        <div id="clock-tier-detail" class="status-card" data-status="ok" aria-live="polite">
+          <!-- Populated by JS -->
+        </div>
+
+        <div class="split-grid-equal">
+          <div class="status-card" data-status="info">
+            <span class="kpi-label">Personal de Nuevo Ingreso</span>
+            <h3 class="subhead">Hasta que estén operativos los servicios</h3>
+            <p class="kpi-caption" style="color: var(--on-surface);">
+              Mientras no dispongas de tarjeta ni accesos activos, realiza los fichajes de forma manual indicando las <strong>horas exactas de entrada y salida</strong>.
+            </p>
+          </div>
+          <div class="status-card" data-status="info">
+            <span class="kpi-label">Retraso o Ausencia de Fichaje</span>
+            <h3 class="subhead">Justificación obligatoria con P030</h3>
+            <p class="kpi-caption" style="color: var(--on-surface);">
+              Si accedes con retraso al centro o no puedes fichar por una situación justificada, solicita el permiso <strong>P030 (Otras situaciones de convenio)</strong> indicando el motivo en la nota.
+            </p>
+          </div>
+          <div class="status-card" data-status="alert">
+            <span class="kpi-label">Detección de Incidencias</span>
+            <h3 class="subhead">Errores en el registro horario</h3>
+            <p class="kpi-caption" style="color: var(--on-surface);">
+              Revisa periódicamente tus marcajes en el Autoservicio. Cualquier error detectado debe comunicarse a <strong>Administración de forma inmediata</strong>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODULE 3: SAP FIORI LAUNCHPAD EXPLORER -->
+    <section id="sec-fiori" class="module-section" data-module="fiori">
+      <div class="section-card">
+        <div class="section-header">
+          <div>
+            <span class="kicker">Módulo 3 · Arquitectura S/4HANA</span>
+            <h2 class="section-title">Explorador de Pestañas y Mosaicos de SAP Fiori</h2>
+          </div>
+          <span class="chip" data-status="info">Mosaicos visibles según permisos</span>
+        </div>
+
+        <p>
+          La pantalla de inicio de SAP Fiori organiza tus gestiones en pestañas superiores (según los permisos asignados a tu usuario) y un menú de usuario arriba a la derecha. Haz clic en las pestañas y en cada mosaico para inspeccionar qué puedes consultar y qué formatos de descarga ofrece:
+        </p>
+
+        <div class="fiori-shell">
+          <div class="fiori-topbar">
+            <div class="fiori-brand">
+              <i data-lucide="layout-dashboard" aria-hidden="true" width="18" height="18"></i>
+              <span>SIRHGA · S/4HANA · Autoservicio del Empleado</span>
+            </div>
+            <button type="button" class="fiori-user-btn" onclick="inspectSpecialUserMenu()">
+              <i data-lucide="user-circle" aria-hidden="true" width="16" height="16"></i>
+              Menú de usuario · Actividades recientes
+            </button>
+          </div>
+
+          <div class="fiori-tabs" role="tablist" aria-label="Pestañas del portal SAP Fiori">
+            <button type="button" class="fiori-tab" role="tab" aria-selected="true" data-fiori-tab="personal" onclick="selectFioriTab('personal', this)">
+              Información Personal (7 mosaicos)
+            </button>
+            <button type="button" class="fiori-tab" role="tab" aria-selected="false" data-fiori-tab="tiempos" onclick="selectFioriTab('tiempos', this)">
+              Gestión de Tiempos (2 mosaicos)
+            </button>
+            <button type="button" class="fiori-tab" role="tab" aria-selected="false" data-fiori-tab="puestos" onclick="selectFioriTab('puestos', this)">
+              Puestos de Trabajo (1 mosaico)
+            </button>
+          </div>
+
+          <div class="fiori-body">
+            <div id="fiori-tiles-grid" class="tile-grid" role="group" aria-label="Mosaicos de la pestaña seleccionada">
+              <!-- Populated by JS -->
+            </div>
+
+            <aside id="fiori-inspector" class="tile-inspector" aria-live="polite">
+              <!-- Populated by JS -->
+            </aside>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODULE 4: PERMISOS, JUSTIFICANTES & PROTOCOLO DE ANULACIÓN -->
+    <section id="sec-permisos" class="module-section" data-module="permisos">
+      <div class="section-card">
+        <div class="section-header">
+          <div>
+            <span class="kicker">Módulo 4 · Ausencias, Códigos y Validación</span>
+            <h2 class="section-title">Directorio de Permisos, Justificantes y Anulación en Curso</h2>
+          </div>
+          <span class="chip" data-status="info">Antelación mín. 2 días · Máx. 2 meses</span>
+        </div>
+
+        <div class="split-grid-equal">
+          <div class="callout" data-status="info">
+            <i class="callout-icon" data-lucide="calendar-clock" aria-hidden="true" width="20" height="20"></i>
+            <div>
+              <strong>Camino A (Situación previsible):</strong> Solicita el permiso con mínimo <strong>2 días de antelación</strong> (en referencia a períodos de <strong>2 meses como máximo</strong>), agrupando días consecutivos del mismo código en una sola petición. Incluye la cita médica si es posible y envía después el justificante a los correos indicados.
+            </div>
+          </div>
+          <div class="callout" data-status="alert">
+            <i class="callout-icon" data-lucide="siren" aria-hidden="true" width="20" height="20"></i>
+            <div>
+              <strong>Camino B (Situación sobrevenida / urgente):</strong> Comunica la ausencia de <strong>forma urgente al Centro</strong>, acude a la atención y tramita la solicitud adjuntando al mismo tiempo el justificante correspondiente (salvo si es <strong>IT con parte de baja</strong>, que nunca va al Autoservicio).
+            </div>
+          </div>
+        </div>
+
+        <div class="filter-row" role="group" aria-label="Filtrar códigos de permisos">
+          <button type="button" class="filter-pill" aria-pressed="true" onclick="filterPermissions('all', this)">Todos los códigos</button>
+          <button type="button" class="filter-pill" aria-pressed="false" onclick="filterPermissions('salud', this)">Médicos y Salud</button>
+          <button type="button" class="filter-pill" aria-pressed="false" onclick="filterPermissions('convenio', this)">Convenio, Turnos y Fichajes</button>
+          <button type="button" class="filter-pill" aria-pressed="false" onclick="filterPermissions('urgente', this)">Urgentes / IT</button>
+        </div>
+
+        <div class="perm-table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Código</th>
+                <th>Concepto y Cuándo se utiliza</th>
+                <th>Plazo / Vía</th>
+                <th>Justificante y Datos Obligatorios</th>
+              </tr>
+            </thead>
+            <tbody id="perm-table-body">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- VALIDATION CHAIN & CANCELLATION SIMULATOR -->
+        <div style="display: grid; gap: var(--space-md); border-top: 1px solid var(--outline-variant); padding-top: var(--space-lg);">
+          <div>
+            <span class="kicker">Protocolo de anulación y borrado de absentismos</span>
+            <h3 class="section-title" style="margin-top: var(--space-xs);">¿Cuándo puedo borrar un permiso en curso y cuándo se bloquea?</h3>
+            <p class="kpi-caption">Haz clic en cada fase de la cadena de validación para comprobar qué ocurre en tu menú del Autoservicio.</p>
+          </div>
+
+          <div class="chain-grid" role="group" aria-label="Fases de validación de un permiso">
+            <button type="button" class="chain-btn" aria-pressed="true" onclick="selectChainStage(1, this)">
+              <span class="chip" data-status="ok">En curso · Borrable</span>
+              <strong>1. Petición enviada</strong>
+              <span class="kpi-caption">Pendiente de 1.er nivel</span>
+            </button>
+            <button type="button" class="chain-btn" aria-pressed="false" onclick="selectChainStage(2, this)">
+              <span class="chip" data-status="ok">En curso · Borrable</span>
+              <strong>2. Jefes Departamentales</strong>
+              <span class="kpi-caption">Validación nivel 1 de 3</span>
+            </button>
+            <button type="button" class="chain-btn" aria-pressed="false" onclick="selectChainStage(3, this)">
+              <span class="chip" data-status="ok">En curso · Borrable</span>
+              <strong>3. Administración</strong>
+              <span class="kpi-caption">Validación nivel 2 de 3</span>
+            </button>
+            <button type="button" class="chain-btn" data-locked="true" aria-pressed="false" onclick="selectChainStage(4, this)">
+              <span class="chip" data-status="alert">Resuelto · Bloqueado</span>
+              <strong>4. Dirección (Fin)</strong>
+              <span class="kpi-caption">Aprobado o denegado</span>
+            </button>
+          </div>
+
+          <div id="chain-detail" class="status-card" data-status="ok" aria-live="polite">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODULE 5: INTERACTIVE ASSISTANT "¿QUÉ HAGO SI…?" -->
+    <section id="sec-asistente" class="module-section" data-module="asistente">
+      <div class="section-card">
+        <div class="section-header">
+          <div>
+            <span class="kicker">Módulo 5 · Asistente Operativo Rápido</span>
+            <h2 class="section-title">¿Qué hago si…? Guía de respuesta inmediata en turno</h2>
+          </div>
+          <span class="chip" data-status="info">Selecciona tu caso</span>
+        </div>
+
+        <div class="scenario-pills" id="scenario-pills" role="group" aria-label="Situaciones habituales de trabajo">
+          <!-- Populated by JS -->
+        </div>
+
+        <div id="scenario-output" class="scenario-result" aria-live="polite">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer-note">
+      <span>Fuente operativa: Proyecto de Migración SIRHGA a S/4HANA (Guías rápidas SAP Fiori: Acceso, Opciones de usuario, Información Personal — Octubre 2026) y Guía del Trabajador de la Residencia Utrillas.</span>
+      <span>Para modificar datos personales, direcciones o cuenta bancaria, contacta con tu Unidad de Personal.</span>
+    </footer>
+  </main>
+
+  <script>
+    const ACCESS_ITEMS = [
+      {
+        id: 1,
+        name: `Mi Cuenta (Perfil y recuperación)`,
+        url: `micuenta.aragon.es`,
+        note: `Cambio de contraseña. Obligatorio registrar móvil o segundo correo.`,
+        status: `ok`
+      },
+      {
+        id: 2,
+        name: `Correo electrónico corporativo y Office`,
+        url: `outlook.office.com`,
+        note: `Correo, OneDrive, Word y Excel. Allí recibes las resoluciones de permisos y PIN/PUK.`,
+        status: `ok`
+      },
+      {
+        id: 3,
+        name: `Autoservicio desde la Residencia / Nuevo SAP Fiori`,
+        url: `sirhga.aragon.es/sap/bc/ui2/flp`,
+        note: `Portal nuevo S/4HANA (ruta interna clásica: intranet.aragon.es/sirhga).`,
+        status: `ok`
+      },
+      {
+        id: 4,
+        name: `Autoservicio desde cualquier dispositivo`,
+        url: `accesoautoservicio.aragon.es`,
+        note: `Acceso externo 24/7 desde móvil, tablet u ordenador personal (requiere 2FA MEM).`,
+        status: `ok`
+      },
+      {
+        id: 5,
+        name: `GARES (Gestión Residencial)`,
+        url: `aplicaciones.aragon.es/gares/index.zul`,
+        note: `Consulta obligatoria en cada turno. Solicitar alta previa a Administración.`,
+        status: `ok`
+      }
+    ];
+
+    const CLOCK_TIERS = {
+      1: {
+        status: `ok`,
+        badge: `1.º Método Principal (Obligatorio por defecto)`,
+        title: `Tarjeta física de empleado o Tarjeta criptográfica roja`,
+        summary: `Según el Real Decreto-Ley 8/2019, el registro de entrada y salida debe hacerse principalmente pasando tu tarjeta por el lector del centro.`,
+        bullets: [
+          `Personal de larga duración: recibe una tarjeta criptográfica roja con certificado digital que permite fichar y realizar trámites electrónicos obligatorios (firma digital de contratos, resoluciones y solicitudes).`,
+          `PIN y PUK: llegan por correo electrónico corporativo una vez iniciada la actividad laboral y realizados los trámites iniciales.`,
+          `Recuperación de PIN/PUK: disponible en aplicaciones.aragon.es/card_pub/.`,
+          `Nunca prestes ni omitas el fichaje de entrada y salida según tu turno asignado.`
+        ]
+      },
+      2: {
+        status: `info`,
+        badge: `2.º Segundo Nivel de Prelación`,
+        title: `Fichaje web desde el Autoservicio del Empleado (SAP Fiori)`,
+        summary: `Se utiliza exclusivamente cuando no sea posible registrar el fichaje con la tarjeta física por motivos debidamente justificados.`,
+        bullets: [
+          `Accede a la pestaña Gestión de Tiempos dentro de SAP Fiori (sirhga.aragon.es/sap/bc/ui2/flp).`,
+          `Registra la hora real de entrada o salida.`,
+          `Si el motivo es un retraso u olvido puntual justificado, tramita además un permiso P030 indicando la causa exacta en la nota.`
+        ]
+      },
+      3: {
+        status: `alert`,
+        badge: `3.º Último Recurso Excepcional`,
+        title: `Firma manual en Conserjería`,
+        summary: `Solo debe emplearse cuando no haya sido posible ni el fichaje con tarjeta ni el registro web en el Autoservicio.`,
+        bullets: [
+          `Acude a Conserjería y firma manualmente en el registro.`,
+          `Anota la hora exacta de entrada y/o salida que te indicarán los compañeros del departamento.`,
+          `Personal de nuevo ingreso: hasta que todos los servicios estén operativos, realizará los fichajes manualmente indicando horas exactas.`,
+          `Ante cualquier error o incidencia, informa inmediatamente a Administración.`
+        ]
+      }
+    };
+
+    const FIORI_DATA = {
+      personal: [
+        {
+          id: `mi-perfil`,
+          icon: `user`,
+          title: `Mi perfil`,
+          tag: `Datos + Remuneración`,
+          editable: `Solo consulta (modificaciones vía Unidad de Personal)`,
+          formats: `Pantalla + enlace directo a nóminas`,
+          details: `Permite consultar tu información personal básica y tus datos de remuneración. Incluye el botón "Mostrar mis recibos de nómina", que abre una nueva pestaña para visualizar y descargar todas tus nóminas.`
+        },
+        {
+          id: `nominas`,
+          icon: `file-text`,
+          title: `Mis recibos de nómina`,
+          tag: `PDF + Excel`,
+          editable: `Solo consulta y descarga`,
+          formats: `Visualización en pantalla · Descarga PDF · Exportar Excel`,
+          details: `Aplicación estándar Fiori donde ves todas las nóminas percibidas en el Gobierno de Aragón desde la implantación de SIRHGA. Desplázate hacia abajo para ver períodos antiguos o busca un período concreto en el buscador superior. Permite ver el recibo en pantalla, descargarlo en PDF o exportar el listado inicial a Excel.`
+        },
+        {
+          id: `salud`,
+          icon: `heart-pulse`,
+          title: `Recibo agregado SALUD`,
+          tag: `Solo personal SALUD`,
+          editable: `Solo consulta y descarga`,
+          formats: `Recibo en PDF por período`,
+          details: `Mosaico visible únicamente para empleados del SALUD. Permite consultar las retroactividades de nómina y visualizar el recibo agregado en formato PDF tras indicar el período deseado en la pantalla de selección.`
+        },
+        {
+          id: `cursos`,
+          icon: `graduation-cap`,
+          title: `Cursos`,
+          tag: `Historial + Excel`,
+          editable: `Solo consulta y exportación`,
+          formats: `Pantalla (tras pulsar Ejecutar) · Excel (Export)`,
+          details: `Consulta todos los cursos que constan registrados en SIRHGA. Al entrar, debes pulsar sobre "Ejecutar" para cargar el listado completo. Mediante la opción "Export" puedes descargar tu historial formativo a tu dispositivo en formato Excel.`
+        },
+        {
+          id: `expediente`,
+          icon: `folder-open`,
+          title: `Expediente electrónico`,
+          tag: `Nueva pestaña`,
+          editable: `Acceso a aplicación externa`,
+          formats: `Consulta documental electrónica`,
+          details: `Al pulsar en este mosaico, el sistema abre automáticamente una nueva pestaña del navegador para autenticarse y acceder a la aplicación de tu expediente electrónico.`
+        },
+        {
+          id: `direcciones`,
+          icon: `map-pin`,
+          title: `Mis direcciones`,
+          tag: `Solo lectura`,
+          editable: `No modificable desde Fiori (contactar con Unidad de Personal)`,
+          formats: `Visualización en pantalla`,
+          details: `Permite comprobar qué domicilios y direcciones figuran grabados en SIRHGA. Se puede visualizar la información completa, pero no editarla directamente desde el Autoservicio.`
+        },
+        {
+          id: `bancarios`,
+          icon: `landmark`,
+          title: `Mis datos bancarios`,
+          tag: `Solo lectura`,
+          editable: `No modificable desde Fiori (contactar con Unidad de Personal)`,
+          formats: `Visualización en pantalla`,
+          details: `Muestra la cuenta bancaria grabada en SIRHGA para el abono de la nómina. Al igual que las direcciones, es de solo lectura: cualquier cambio de IBAN debe gestionarse con tu Unidad de Personal.`
+        }
+      ],
+      tiempos: [
+        {
+          id: `fichaje-web`,
+          icon: `clock-4`,
+          title: `Fichaje web (Gestión de Tiempos)`,
+          tag: `2.º nivel de prelación`,
+          editable: `Registro de marcaje`,
+          formats: `Registro online de entrada / salida`,
+          details: `Herramienta de marcaje horario para usar exclusivamente en segundo lugar cuando no sea posible fichar con la tarjeta física o criptográfica por motivos debidamente justificados.`
+        },
+        {
+          id: `solicitud-permisos`,
+          icon: `calendar-plus`,
+          title: `Solicitud y anulación de permisos`,
+          tag: `Códigos P001–P032`,
+          editable: `Alta y borrado mientras está en curso`,
+          formats: `Flujo de 3 niveles (Jefatura · Admin · Dirección)`,
+          details: `Permite solicitar permisos agrupando días consecutivos del mismo código (máx. 2 meses, preferente 2 días de antelación) y borrar peticiones en curso seleccionando el permiso (1) y pulsando Borrar (2) antes de su resolución final. Recuerda: la IT nunca se tramita aquí.`
+        }
+      ],
+      puestos: [
+        {
+          id: `rpt`,
+          icon: `briefcase`,
+          title: `Informe de puestos desempeñados (RPT)`,
+          tag: `Historial de puestos`,
+          editable: `Solo consulta`,
+          formats: `Informe de trayectoria y puestos`,
+          details: `Dentro de la pestaña Puestos de Trabajo permite consultar la relación de puestos de trabajo (RPT) y el informe detallado de los puestos que has desempeñado en tu vinculación laboral registrada en SIRHGA.`
+        }
+      ]
+    };
+
+    const USER_MENU_INSPECT = {
+      title: `Menú de usuario y Actividades recientes (arriba a la derecha)`,
+      tag: `Barra superior Fiori`,
+      editable: `Opciones de sesión y visualización`,
+      formats: `Acceso rápido desde cualquier pestaña`,
+      details: `En la parte superior derecha de SAP Fiori dispones del menú de usuario. Desde allí puedes revisar tus "Actividades recientes" (últimas aplicaciones abiertas) y visualizar o ajustar determinadas preferencias de usuario. Las pestañas visibles en la barra superior dependen de los permisos de tu perfil.`
+    };
+
+    const PERMISSIONS = [
+      {
+        code: `IT`,
+        isAlert: true,
+        category: `urgente`,
+        title: `Incapacidad Temporal (Parte de baja médica)`,
+        when: `Baja médica oficial con parte de baja emitido por el servicio médico.`,
+        path: `¡PROHIBIDO EN AUTOSERVICIO! Comunicación urgente directa al Centro.`,
+        docs: `Nunca tramitar por Fiori. Contactar de urgencia con Dirección/Administración del centro y entregar el parte correspondiente.`
+      },
+      {
+        code: `P001`,
+        isAlert: false,
+        category: `convenio`,
+        title: `Permiso ordinario / Asuntos propios (código estándar)`,
+        when: `Disfrute de días de permiso ordinario previstos en cartelera.`,
+        path: `Camino A · Mínimo 2 días antes (horizonte máx. 2 meses).`,
+        docs: `Agrupar días consecutivos del mismo código en una sola petición para minimizar registros. Validación en 3 niveles.`
+      },
+      {
+        code: `P005`,
+        isAlert: false,
+        category: `salud`,
+        title: `Ingreso grave de familiar`,
+        when: `Hospitalización o ingreso grave de un familiar según convenio.`,
+        path: `Camino A (si programado) o Camino B (urgencia comunicada al Centro).`,
+        docs: `Certificados que justifiquen tanto el ingreso hospitalario como el parentesco. En casos sobrevenidos, comunicar de urgencia al Centro.`
+      },
+      {
+        code: `P007`,
+        isAlert: false,
+        category: `salud`,
+        title: `Atención médica del trabajador`,
+        when: `Asistencia a consulta, prueba o atención médica propia en horario laboral.`,
+        path: `Camino A (con antelación) o Camino B (urgencia al Centro).`,
+        docs: `Justificante de visita médica (o preferentemente cita médica) indicando obligatoriamente hora de entrada, hora de salida y lugar de la atención.`
+      },
+      {
+        code: `P009`,
+        isAlert: false,
+        category: `salud`,
+        title: `Acompañamiento médico`,
+        when: `Acompañar a un familiar a atención médica cuando proceda.`,
+        path: `Camino A (con antelación) o Camino B (urgencia al Centro).`,
+        docs: `Justificante de visita/cita con hora de entrada, hora de salida, lugar, justificación del parentesco del paciente y necesidad de acompañamiento (si no es evidente por edad).`
+      },
+      {
+        code: `P030`,
+        isAlert: false,
+        category: `convenio`,
+        title: `Otras situaciones de convenio`,
+        when: `Cambios de turno (justificar la ausencia, nunca la presencia), retrasos, olvido de fichaje justificado, compensaciones horarias o festivo local.`,
+        path: `Camino A o B según el caso, bajo supervisión de Administración.`,
+        docs: `Obligatorio detallar en la NOTA el motivo, el tramo horario y, en cambios de turno, compañera con quien se acuerda y fecha de devolución.`
+      },
+      {
+        code: `P032`,
+        isAlert: false,
+        category: `salud`,
+        title: `Enfermedad sin parte de baja`,
+        when: `Ausencia por enfermedad o accidente del trabajador que NO dé lugar a Incapacidad Temporal (IT).`,
+        path: `Camino B (urgente al Centro) + petición adjuntando justificante.`,
+        docs: `Justificante médico de imposibilidad de acudir al Centro detallando fechas exactas y/o tiempo de convalecencia (días previos o futuros).`
+      }
+    ];
+
+    const CHAIN_STAGES = {
+      1: {
+        status: `ok`,
+        title: `Fase 1 · Petición registrada en el Autoservicio`,
+        canDelete: true,
+        text: `Tu solicitud aparece activa en tu menú de permisos pendientes. Si detectas un error (fechas, código o nota incompleta), puedes seleccionarla (1) y pulsar Borrar (2) directamente.`
+      },
+      2: {
+        status: `ok`,
+        title: `Fase 2 · En validación por Jefatura Departamental (Nivel 1/3)`,
+        canDelete: true,
+        text: `Mientras la petición no haya completado toda la cadena (o no haya sido rechazada aún), sigue figurando en tu listado en curso. Todavía puedes seleccionarla (1) y Borrarla (2).`
+      },
+      3: {
+        status: `ok`,
+        title: `Fase 3 · En validación por Administración (Nivel 2/3)`,
+        canDelete: true,
+        text: `Ha superado Jefatura y espera revisión de Administración y Dirección. Si necesitas cancelarla antes de la resolución definitiva, aún puedes seleccionarla (1) y Borrarla (2).`
+      },
+      4: {
+        status: `alert`,
+        title: `Fase 4 · Resolución definitiva por Dirección (Aprobado o Denegado)`,
+        canDelete: false,
+        text: `Cuando cualquier nivel deniega el permiso o los 3 niveles lo aprueban, recibes la confirmación en tu Autoservicio y por correo electrónico. El permiso DESAPARECE de este menú y el trabajador ya NO puede visualizarlo ni borrarlo. Si se aprobó con algún error, comunícalo inmediatamente a Dirección / Administración.`
+      }
+    };
+
+    const SCENARIOS = [
+      {
+        id: `baja-it`,
+        label: `Tengo parte de baja médica (IT)`,
+        action: `Comunica tu baja de forma URGENTE al Centro (Dirección/Administración).`,
+        tool: `NO entres en SAP Fiori para esto`,
+        note: `La Incapacidad Temporal (IT) nunca se tramita por el Autoservicio.`
+      },
+      {
+        id: `sin-baja`,
+        label: `Estoy indispuesto hoy sin parte de baja`,
+        action: `Avisa urgente al Centro, acude al médico y pide el permiso adjuntando justificante.`,
+        tool: `Código P032 en Gestión de Tiempos`,
+        note: `El justificante debe detallar la imposibilidad de acudir y las fechas o días de convalecencia.`
+      },
+      {
+        id: `olvido-tarjeta`,
+        label: `Olvidé la tarjeta o no funciona el lector`,
+        action: `Ficha en segundo lugar en SAP Fiori (web). Si tampoco es posible, firma manualmente en Conserjería con la hora exacta indicada por tu departamento.`,
+        tool: `2.º Fichaje web Fiori → 3.º Conserjería`,
+        note: `Si llegas tarde o faltó marcaje por causa justificada, pide además P030 explicando el motivo en la nota.`
+      },
+      {
+        id: `cambio-turno`,
+        label: `Quiero cambiar un turno con una compañera`,
+        action: `Justifica siempre la ausencia (nunca la presencia) mediante solicitud previa.`,
+        tool: `Código P030 (Otras situaciones de convenio)`,
+        note: `Detalla en la nota: motivo, tramo horario, nombre de la compañera con quien acuerdas el cambio y fecha de devolución.`
+      },
+      {
+        id: `cita-medica`,
+        label: `Tengo cita médica (propia o de un familiar)`,
+        action: `Solicita con antelación (mín. 2 días si es previsible) o avisa urgente si sobreviene, y entrega después el justificante de visita.`,
+        tool: `P007 (propia) · P009 (acompañamiento)`,
+        note: `Debe constar hora de entrada, hora de salida y lugar. En P009, además parentesco y necesidad de acompañamiento.`
+      },
+      {
+        id: `error-permiso`,
+        label: `Me equivoqué al pedir un permiso`,
+        action: `Si aún está en curso, entra en el listado, selecciónalo (1) y bórralo (2). Si ya está aprobado y desapareció del menú, avisa a Dirección/Administración.`,
+        tool: `Menú de permisos en curso / Aviso a Dirección`,
+        note: `Un trabajador nunca puede borrar un permiso ya aprobado.`
+      },
+      {
+        id: `ver-nomina`,
+        label: `Necesito descargar una nómina o mis cursos`,
+        action: `Entra en SAP Fiori (24/7) con tu correo o DNI (MEM), ve a Información Personal y abre "Mis recibos de nómina" o "Cursos".`,
+        tool: `PDF de nóminas · Export Excel en Cursos`,
+        note: `En Cursos recuerda pulsar "Ejecutar" antes de usar "Export". Empleados del SALUD cuentan además con "Recibo agregado SALUD".`
+      }
+    ];
+
+    let currentSection = `all`;
+    let accessStates = ACCESS_ITEMS.map(item => ({ id: item.id, ok: true }));
+
+    function renderAccessList() {
+      const container = document.getElementById(`access-list`);
+      if (!container) return;
+      container.innerHTML = ACCESS_ITEMS.map((item, idx) => {
+        const stateObj = accessStates.find(s => s.id === item.id);
+        const isOk = stateObj ? stateObj.ok : true;
+        return `
+          <div class="access-item">
+            <div class="access-item-head">
+              <div style="display: flex; align-items: center; gap: var(--space-sm);">
+                <span class="access-num">${item.id}</span>
+                <strong>${item.name}</strong>
+              </div>
+              <div class="diag-toggle" role="group" aria-label="Estado del acceso ${item.id}">
+                <button type="button" class="diag-btn ${isOk ? 'is-ok' : ''}" onclick="setAccessState(${item.id}, true)">Funciona</button>
+                <button type="button" class="diag-btn ${!isOk ? 'is-fail' : ''}" onclick="setAccessState(${item.id}, false)">Falla</button>
+              </div>
+            </div>
+            <div class="url-box">
+              <span class="url-text">${item.url}</span>
+              <button type="button" class="btn btn-subtle btn-sm" onclick="copyText('${item.url}', this)">Copiar</button>
+            </div>
+            <span class="kpi-caption">${item.note}</span>
+          </div>
+        `;
+      }).join(``);
+      updateIncidentReport();
+    }
+
+    function setAccessState(id, isOk) {
+      accessStates = accessStates.map(s => s.id === id ? { id: s.id, ok: isOk } : s);
+      renderAccessList();
+    }
+
+    function updateIncidentReport() {
+      const out = document.getElementById(`incident-output`);
+      if (!out) return;
+      const working = accessStates.filter(s => s.ok).map(s => s.id);
+      const failing = accessStates.filter(s => !s.ok).map(s => s.id);
+      const lines = [
+        `Incidencia de accesos — Residencia Utrillas`,
+        `• Accesos que SÍ funcionan: ${working.length ? working.join(`, `) : 'Ninguno'}`,
+        `• Accesos que NO funcionan: ${failing.length ? failing.join(`, `) : 'Ninguno (todos operativos)'}`
+      ];
+      out.textContent = lines.join(`\n`);
+    }
+
+    function copyText(text, btn) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).catch(() => {});
+      }
+      if (btn) {
+        const orig = btn.textContent;
+        btn.textContent = `Copiado`;
+        setTimeout(() => { btn.textContent = orig; }, 1400);
+      }
+    }
+
+    function copyIncidentReport(btn) {
+      const out = document.getElementById(`incident-output`);
+      const msg = document.getElementById(`incident-copy-msg`);
+      if (out && navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(out.textContent).catch(() => {});
+      }
+      if (msg) {
+        msg.textContent = `Parte del 1 al 5 copiado al portapapeles para enviar a Administración.`;
+        setTimeout(() => { msg.textContent = ``; }, 2600);
+      }
+    }
+
+    function selectClockTier(rank, btn) {
+      document.querySelectorAll(`.ladder-step`).forEach(el => el.setAttribute(`aria-pressed`, `false`));
+      if (btn) btn.setAttribute(`aria-pressed`, `true`);
+      const data = CLOCK_TIERS[rank];
+      const box = document.getElementById(`clock-tier-detail`);
+      if (!data || !box) return;
+      box.setAttribute(`data-status`, data.status);
+      box.innerHTML = `
+        <span class="kpi-label">${data.badge}</span>
+        <h3 class="subhead">${data.title}</h3>
+        <p>${data.summary}</p>
+        <ul class="clean-list">
+          ${data.bullets.map(b => `<li>${b}</li>`).join(``)}
+        </ul>
+      `;
+    }
+
+    function selectFioriTab(tabKey, btn) {
+      document.querySelectorAll(`.fiori-tab`).forEach(el => el.setAttribute(`aria-selected`, `false`));
+      if (btn) btn.setAttribute(`aria-selected`, `true`);
+      const tiles = FIORI_DATA[tabKey] || [];
+      const grid = document.getElementById(`fiori-tiles-grid`);
+      if (!grid) return;
+      grid.innerHTML = tiles.map((tile, idx) => `
+        <button type="button" class="fiori-tile" aria-pressed="${idx === 0 ? 'true' : 'false'}" onclick="inspectFioriTile('${tabKey}', '${tile.id}', this)">
+          <span class="tile-icon">
+            <i data-lucide="${tile.icon}" aria-hidden="true" width="20" height="20"></i>
+          </span>
+          <div>
+            <div class="tile-title">${tile.title}</div>
+            <div class="tile-tag">${tile.tag}</div>
+          </div>
+        </button>
+      `).join(``);
+      if (tiles[0]) renderInspector(tiles[0]);
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function inspectFioriTile(tabKey, tileId, btn) {
+      document.querySelectorAll(`.fiori-tile`).forEach(el => el.setAttribute(`aria-pressed`, `false`));
+      if (btn) btn.setAttribute(`aria-pressed`, `true`);
+      const tile = (FIORI_DATA[tabKey] || []).find(t => t.id === tileId);
+      if (tile) renderInspector(tile);
+    }
+
+    function inspectSpecialUserMenu() {
+      document.querySelectorAll(`.fiori-tile`).forEach(el => el.setAttribute(`aria-pressed`, `false`));
+      renderInspector(USER_MENU_INSPECT);
+    }
+
+    function renderInspector(item) {
+      const box = document.getElementById(`fiori-inspector`);
+      if (!box) return;
+      box.innerHTML = `
+        <div>
+          <span class="chip" data-status="info">${item.tag}</span>
+          <h3 class="subhead" style="margin-top: var(--space-sm);">${item.title}</h3>
+        </div>
+        <p>${item.details}</p>
+        <div class="inspector-meta" style="display: grid; gap: var(--space-sm); border-top: 1px solid var(--outline-variant); padding-top: var(--space-md);">
+          <div>
+            <span class="kpi-label">Formatos y acciones</span>
+            <div>${item.formats}</div>
+          </div>
+          <div>
+            <span class="kpi-label">Edición de datos</span>
+            <div>${item.editable}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderPermissions(filterCategory, searchTerm) {
+      const tbody = document.getElementById(`perm-table-body`);
+      if (!tbody) return;
+      const q = (searchTerm || ``).trim().toLowerCase();
+      const rows = PERMISSIONS.filter(p => {
+        const matchCat = filterCategory === `all` || p.category === filterCategory;
+        const matchQuery = !q || `${p.code} ${p.title} ${p.when} ${p.path} ${p.docs}`.toLowerCase().includes(q);
+        return matchCat && matchQuery;
+      });
+      if (!rows.length) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="4" style="text-align: center; color: var(--on-surface-variant);">
+              No hay códigos que coincidan con tu búsqueda actual. Prueba con otro término o pulsa "Todos los códigos".
+            </td>
+          </tr>
+        `;
+        return;
+      }
+      tbody.innerHTML = rows.map(p => `
+        <tr class="${p.isAlert ? 'is-alert-row' : ''}">
+          <td><span class="code-badge ${p.isAlert ? 'is-alert' : ''}">${p.code}</span></td>
+          <td>
+            <strong>${p.title}</strong>
+            <div class="kpi-caption" style="margin-top: var(--space-xs); color: var(--on-surface);">${p.when}</div>
+          </td>
+          <td>${p.path}</td>
+          <td>${p.docs}</td>
+        </tr>
+      `).join(``);
+    }
+
+    function filterPermissions(category, btn) {
+      document.querySelectorAll(`.filter-pill`).forEach(el => el.setAttribute(`aria-pressed`, `false`));
+      if (btn) btn.setAttribute(`aria-pressed`, `true`);
+      const searchEl = document.getElementById(`global-search`);
+      renderPermissions(category, searchEl ? searchEl.value : ``);
+    }
+
+    function selectChainStage(stageId, btn) {
+      document.querySelectorAll(`.chain-btn`).forEach(el => el.setAttribute(`aria-pressed`, `false`));
+      if (btn) btn.setAttribute(`aria-pressed`, `true`);
+      const stage = CHAIN_STAGES[stageId];
+      const box = document.getElementById(`chain-detail`);
+      if (!stage || !box) return;
+      box.setAttribute(`data-status`, stage.status);
+      box.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: var(--space-sm); flex-wrap: wrap;">
+          <h4 class="subhead">${stage.title}</h4>
+          <span class="chip" data-status="${stage.canDelete ? 'ok' : 'alert'}">
+            ${stage.canDelete ? 'Permite Seleccionar (1) y Borrar (2)' : 'No borrable por el trabajador'}
+          </span>
+        </div>
+        <p>${stage.text}</p>
+      `;
+    }
+
+    function renderScenarios() {
+      const pills = document.getElementById(`scenario-pills`);
+      if (!pills) return;
+      pills.innerHTML = SCENARIOS.map((sc, idx) => `
+        <button type="button" class="scenario-btn" aria-pressed="${idx === 0 ? 'true' : 'false'}" onclick="selectScenario('${sc.id}', this)">
+          ${sc.label}
+        </button>
+      `).join(``);
+      if (SCENARIOS[0]) showScenarioDetail(SCENARIOS[0]);
+    }
+
+    function selectScenario(id, btn) {
+      document.querySelectorAll(`.scenario-btn`).forEach(el => el.setAttribute(`aria-pressed`, `false`));
+      if (btn) btn.setAttribute(`aria-pressed`, `true`);
+      const found = SCENARIOS.find(s => s.id === id);
+      if (found) showScenarioDetail(found);
+    }
+
+    function showScenarioDetail(sc) {
+      const box = document.getElementById(`scenario-output`);
+      if (!box) return;
+      const isUrgent = sc.id === `baja-it`;
+      box.innerHTML = `
+        <div class="status-card" data-status="${isUrgent ? 'alert' : 'ok'}">
+          <span class="kpi-label">1. Acción inmediata</span>
+          <strong class="subhead">${sc.action}</strong>
+        </div>
+        <div class="status-card" data-status="info">
+          <span class="kpi-label">2. Canal / Código aplicable</span>
+          <strong class="subhead">${sc.tool}</strong>
+        </div>
+        <div class="status-card" data-status="info">
+          <span class="kpi-label">3. Requisito clave</span>
+          <p>${sc.note}</p>
+        </div>
+      `;
+    }
+
+    function selectSection(sectionKey, btn) {
+      currentSection = sectionKey;
+      document.querySelectorAll(`.nav-tab`).forEach(el => el.setAttribute(`aria-selected`, `false`));
+      if (btn) btn.setAttribute(`aria-selected`, `true`);
+      document.querySelectorAll(`.module-section`).forEach(sec => {
+        if (sectionKey === `all` || sec.dataset.module === sectionKey) {
+          sec.classList.remove(`is-hidden`);
+        } else {
+          sec.classList.add(`is-hidden`);
+        }
+      });
+    }
+
+    function handleGlobalSearch(rawQuery) {
+      const q = (rawQuery || ``).trim().toLowerCase();
+      const status = document.getElementById(`search-status`);
+      const sections = document.querySelectorAll(`.module-section`);
+
+      if (!q) {
+        if (status) status.textContent = ``;
+        renderPermissions(`all`, ``);
+        const activeTab = document.querySelector(`.nav-tab[aria-selected="true"]`);
+        selectSection(currentSection, activeTab);
+        return;
+      }
+
+      let matches = 0;
+      sections.forEach(sec => {
+        const text = sec.textContent.toLowerCase();
+        if (text.includes(q)) {
+          sec.classList.remove(`is-hidden`);
+          matches++;
+        } else {
+          sec.classList.add(`is-hidden`);
+        }
+      });
+
+      renderPermissions(`all`, q);
+
+      if (status) {
+        status.textContent = matches > 0
+          ? `Mostrando ${matches} módulo(s) con coincidencias para "${rawQuery.trim()}".`
+          : `Sin coincidencias exactas para "${rawQuery.trim()}". Limpia el buscador para ver toda la guía.`;
+      }
+    }
+
+    function clearGlobalSearch() {
+      const input = document.getElementById(`global-search`);
+      if (input) input.value = ``;
+      handleGlobalSearch(``);
+    }
+
+    document.addEventListener(`DOMContentLoaded`, () => {
+      renderAccessList();
+      selectClockTier(1, document.querySelector(`.ladder-step[data-rank="1"]`));
+      selectFioriTab(`personal`, document.querySelector(`.fiori-tab[data-fiori-tab="personal"]`));
+      renderPermissions(`all`, ``);
+      selectChainStage(1, document.querySelector(`.chain-btn`));
+      renderScenarios();
+      if (window.lucide) lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
